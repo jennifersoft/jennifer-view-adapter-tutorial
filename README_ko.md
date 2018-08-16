@@ -14,7 +14,7 @@
 1. File > New > Project... > Maven을 선택하여, 새로운 프로젝트를 생성한다.
 2. GroupId와 ArtifactId를 자신의 프로젝트에 맞게 넣어주고, Next 버튼을 클릭면 프로젝트가 생성된다.
 3. src/main/java 디렉토리에 GroupId.ArtifactId 구조로 어댑터 클래스가 추가될 패키지를 생성하자.
-4. pom.xml에 com.aries.extension 라이브러리와 메이븐 컴파일러 플러그인을 설정하자. 관련 내용은 본 프로젝트에서 배포되는 [pom.xml]((https://github.com/jennifersoft/jennifer-view-adapter-tutorial/blob/master/pom.xml))을 참고하면 된다.
+4. pom.xml에 com.aries.extension 라이브러리와 메이븐 컴파일러 플러그인을 설정하자. 관련 내용은 본 프로젝트에서 배포되는 [pom.xml](https://github.com/jennifersoft/jennifer-view-adapter-tutorial/blob/master/pom.xml)을 참고하면 된다.
 > 참고로 GroupdId는 플러그인과 달리 임의로 설정해도 상관없지만 com.aries를 사용할 것을 권장한다.
 
 ## 어댑터 핸들러 인터페이스 구현하기
