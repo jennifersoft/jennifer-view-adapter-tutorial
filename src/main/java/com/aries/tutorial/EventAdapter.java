@@ -1,4 +1,4 @@
-package com.aries.adapter;
+package com.aries.tutorial;
 
 import com.aries.extension.data.EventData;
 import com.aries.extension.handler.EventHandler;

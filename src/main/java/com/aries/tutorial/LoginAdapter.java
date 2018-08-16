@@ -1,4 +1,4 @@
-package com.aries.adapter;
+package com.aries.tutorial;
 
 import com.aries.extension.data.UserData;
 import com.aries.extension.handler.LoginHandler;
