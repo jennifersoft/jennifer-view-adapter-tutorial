@@ -9,17 +9,12 @@
 
 ## IntelliJ에서 어댑터 개발환경 구성하기
 
-어댑터 모듈을 구현하기 위해서는 별도의 프로젝트를 생성하고, JENNIFER_VIEW_SERVER_PATH/lib/jennifer.server.view-5.0.x.x.jar의 경로를 Java Build Path에 추가한다.
+5.4.0 버전부터는 제니퍼 뷰서버가 설치되어 있지 않아도 메이븐 디펜던시 하나만 추가하면 어댑터를 구현할 수 있게 되었다.
 
-1. File > New > Project... > Java를 선택하여, 새로운 프로젝트를 생성한다.
-2. 컴파일 환경 구성을 위해 File > Project Structure... > Project Settings > Libraries에서 추가 버튼을 클릭하여 이미 설치된 제니퍼 뷰서버 jar 파일을 선택한다.
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/1.png)
-3. 빌드 파일 생성을 위해 File > Project Structure... > Project Settings > Artifacts에서 추가 버튼을 클릭하여 Jar > From modules with dependencies...를 클릭한다.
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/2.png)
-4. Output Layout 좌측에 Extracted 'jennifer.server.view-5.3.x.jar/ ...'를 선택하고, 삭제 버튼을 클릭한다. 어차피 어댑터 jar 파일은 제니퍼 뷰서버에서 로드되기 때문에 굳이 2번 컴파일 환경 구성을 위해 추가해둔 제니퍼 뷰서버 jar파일을 빌드 시점에 포함하지 않아도 된다. 
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/3.png)
-5. 어댑터 클래스를 가이드대로 개발한 후, Build > Build Artifacts... > Action > Build를 통해 jar 파일로 빌드할 수 있다.
-
+1. File > New > Project... > Maven을 선택하여, 새로운 프로젝트를 생성한다.
+2. GroupId와 ArtifactId를 자신의 프로젝트에 맞게 넣어주고, Next 버튼을 클릭면 프로젝트가 생성된다.
+3. src/main/java 디렉토리에 GroupId.ArtifactId 구조로 어댑터 클래스가 추가될 패키지를 생성하자.
+> 참고로 GroupdId는 플러그인과 달리 GroupId를 임의로 설정해도 상관없지만 com.aries를 사용할 것을 권장한다.
 
 ## 어댑터 핸들러 인터페이스 구현하기
 
