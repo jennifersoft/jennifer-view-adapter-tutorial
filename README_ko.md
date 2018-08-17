@@ -17,32 +17,29 @@
 4. com.aries.extension 라이브러리와 빌드 관련 메이븐 플러그인에 대한 설정 코드를 [pom.xml](https://github.com/jennifersoft/jennifer-view-adapter-tutorial/blob/master/pom.xml)에 추가하자.
 > 참고로 GroupdId는 플러그인과 달리 임의로 설정해도 상관없지만 com.aries를 사용할 것을 권장한다.
 
-## 어댑터 핸들러 인터페이스 구현하기
-
-어댑터 클래스를 구현하기 위해서는 com.aries.view.extension.handler.Adapter 인터페이스를 구현해야 하며, on 메소드의 com.aries.view.extension.data.Model 객체 배열로 데이터를 받을 수 있다.
 
 ### X-View 트랜잭션 어댑터
 
 실시간 X-View 차트에 나오는 트랜잭션 데이터를 어댑터 핸들러를 통해 실시간으로 받을 수 있다. 예를 들어 트랜잭션 데이터를 제니퍼 DB만이 아닌 별도의 데이터베이스에 저장하고 싶을 때, 어댑터 핸들러에 관련된 코드를 추가하면 된다. X-View 트랜잭션 어댑터 클래스 코드는 다음과 같다.
 
-    package adapter;
+    package com.aries.tutorial;
 
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.data.Transaction;
-    import com.aries.view.extension.util.LogUtil;
+    import com.aries.extension.data.TransactionData;
+    import com.aries.extension.handler.TransactionHandler;
+    import com.aries.extension.util.PropertyUtil;
 
-    public class XViewAdapter implements Adapter {
-        public void on(Model[] messages) {
-            for(int i = 0; i < messages.length; i++) {
-                Transaction model = (Transaction) message[i];
+    public class TransactionAdapter implements TransactionHandler {
+        @Override
+        public void on(TransactionData[] transactions) {
+            System.out.println("[TransactionAdapter] - " +
+                    PropertyUtil.getValue("transaction", "subject", "Unknown subject"));
 
-                // 트랜잭션 모델을 참조하여 핸들러 구현하기
-                LogUtil.info("도메인 아이디: " + model.getDomainId());
-                LogUtil.info("인스턴스 이름: " + model.getInstanceName());
-                LogUtil.info("트랜잭션 아이디: " + model.getTxid());
-                LogUtil.info("응답시간: " + model.getResponseTime());
-                LogUtil.info("애플리케이션: " + model.getApplicationName());
+            for(TransactionData data : transactions) {
+                System.out.println("Domain ID : " + data.domainId);
+                System.out.println("Instance Name : " + data.instanceName);
+                System.out.println("Transaction ID : " + data.txid);
+                System.out.println("Response Time : " + data.responseTime);
+                System.out.println("Application : " + data.applicationName);
             }
         }
     }
