@@ -125,9 +125,13 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_login/7.png)
 
-### 로그인 어댑터 핸들러 구현하기
+#### preHandle 메소드
 
-제니퍼 뷰서버 로그인 화면에서 인증을 시도했을 때, 넘어오는 ID와 어댑터 핸들러를 통해 받을 수 있다.
+사용자가 입력한 ID와 비밀번호를 기반으로 미리 구축해둔 인증 로직을 통해 검증한다. 만약에 인증이 실패한다면 null 값을 리턴하면 되고, 성공한다면 User 객체를 생성하여, 관련된 값들을 지정하여 리턴하면된다.
+
+#### redirect 메소드
+
+인증이 성공하면 사용자가 최초에 보여지는 화면을 redirect 메소드를 통해 정할 수 있다.
 
     package com.aries.tutorial;
 
