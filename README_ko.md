@@ -128,6 +128,6 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 
 ## 뷰서버 옵션 사용하기
 
-제니퍼 뷰서버 server_view.conf 설정 파일에 정의된 옵션 값을 사용할 수 있다.
+제니퍼 뷰서버 server_view.conf 설정 파일에 정의된 옵션 값을 사용할 수 있다. 첫번째 매개변수는 키 이름이고, 두번째는 값이 없을 때, 반환되는 기본 값이다.
 
     String db_path = com.aries.extension.util.ConfigUtil.getValue("db_path", "../db_view");
