@@ -18,7 +18,7 @@
 > 참고로 GroupdId는 플러그인과 달리 임의로 설정해도 상관없지만 com.aries를 사용할 것을 권장한다.
 
 
-### X-View 트랜잭션 어댑터
+## X-View 트랜잭션 어댑터
 
 실시간 X-View 차트에 나오는 트랜잭션 데이터를 어댑터 핸들러를 통해 실시간으로 받을 수 있다. 예를 들어 트랜잭션 데이터를 제니퍼 DB만이 아닌 별도의 데이터베이스에 저장하고 싶을 때, 어댑터 핸들러에 관련된 코드를 추가하면 된다. X-View 트랜잭션 어댑터 클래스 코드는 다음과 같다.
 
@@ -69,29 +69,29 @@
 | String | applicationName |
 | long | txid |
 
-### Event 알림 어댑터
+## Event 알림 어댑터
 
 EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받기 위해서는 [관리 > EVENT 룰] 메뉴에서 설정된 값의 외부연동이 활성화되어 있어야 한다. EVENT 알림 어댑터 클래스 코드는 다음과 같다.
 
-    package adapter;
-    
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.data.Event;
-    import com.aries.view.extension.util.LogUtil;
-    
-    public class EventAdapter implements Adapter {
-        public void on(Model[] messages) {
-            for(int i = 0; i < messages.length; i++) {
-                Event model = (Event) message[i];
+    package com.aries.tutorial;
 
-                // EVENT 모델을 참조하여 핸들러 구현하기
-                LogUtil.info("도메인 아이디: " + model.getDomainId());
-                LogUtil.info("인스턴스 이름: " + model.getInstanceName());
-                LogUtil.info("트랜잭션 아이디: " + model.getTxid());
-                LogUtil.info("서비스 이름: " + model.getServiceName());
-                LogUtil.info("에러 유형: " + model.getErrorType());
-                LogUtil.info("이벤트 심각도: " + model.getEventLevel());
+    import com.aries.extension.data.EventData;
+    import com.aries.extension.handler.EventHandler;
+    import com.aries.extension.util.PropertyUtil;
+
+    public class EventAdapter implements EventHandler {
+        @Override
+        public void on(EventData[] events) {
+            System.out.println("[EventAdapter] - " +
+                    PropertyUtil.getValue("event", "subject", "Unknown subject"));
+
+            for(EventData data : events) {
+                System.out.println("Domain ID : " + data.domainId);
+                System.out.println("Instance Name : " + data.instanceName);
+                System.out.println("Transaction ID : " + data.txid);
+                System.out.println("Service Name : " + data.serviceName);
+                System.out.println("Error Type : " + data.errorType);
+                System.out.println("Event Level : " + data.eventLevel);
             }
         }
     }
