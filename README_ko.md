@@ -119,6 +119,32 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 
 제니퍼 뷰서버 로그인 화면에서 인증을 시도했을 때, 넘어오는 ID와 어댑터 핸들러를 통해 받을 수 있다.
 
+    package com.aries.tutorial;
+
+    import com.aries.extension.data.UserData;
+    import com.aries.extension.handler.LoginHandler;
+    import com.aries.extension.util.PropertyUtil;
+
+    public class LoginAdapter implements LoginHandler {
+        @Override
+        public UserData preHandle(String id, String password) {
+            System.out.println("[LoginAdapter] - " +
+                    PropertyUtil.getValue("login", "subject", "Unknown subject"));
+
+            if(id.equals("user1") && password.equals("password1")) {
+                return new UserData(id, password, "admin", "Tester");
+            }
+
+            return null;
+        }
+
+        @Override
+        public String redirect(String id, String password) {
+            return "/dashboard/realtimeAdmin";
+        }
+    }
+
+
 ## 사용자정의 옵션 사용하기
 
 제니퍼 뷰서버의 관리 > 어댑터 및 실험실에서 직접 구현한 어댑터를 추가할 수 있는데, 이때 ID를 필수적으로 입력해야한다. 이 값은 어댑터 핸들러를 구현할 때, 사용자정의 옵션을 가져오기 위한 ID이다.
