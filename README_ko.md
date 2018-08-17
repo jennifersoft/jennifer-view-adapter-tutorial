@@ -116,7 +116,7 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 | long | txid |
 
 
-### 어댑터 사용자정의 옵션 사용하기
+## 어댑터 사용자정의 옵션 사용하기
 
 제니퍼 뷰서버의 관리 > 어댑터 및 실험실에서 직접 구현한 어댑터를 추가할 수 있는데, 이때 ID를 필수적으로 입력해야한다. 이 값은 어댑터 핸들러를 구현할 때, 사용자정의 옵션을 가져오기 위한 ID이다.
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/4.png)
@@ -125,23 +125,3 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/5.png)
 
 설정된 사용자정의 옵션들은 아래와 같이 어댑터 핸들러 구현시 사용할 수 있다. 첫번째 변수는 앞에서 어댑터를 추가할 때, 입력한 ID이며, 두번째 변수는 사용자정의 옵션키이다. 마지막 세번째 변수는 해당 키의 값이 없을 경우에 대신 추가되는 기본값이다.
-
-    package event;
-
-    import com.aries.view.extension.data.Event;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.util.PropertyUtil;
-    import com.aries.view.extension.util.LogUtil;
-
-    public class LogAdapter implements Adapter {
-        @Override
-        public void on(Model[] messages) {
-            String option = PropertyUtil.getValue("eventlog", "full_path", "default_value");
-
-            for(int i = 0; i < messages.length; i++) {
-                Event model = (Event) messages[i];
-                LogUtil.info(model.getErrorType() + " : " + option);
-            }
-        }
-    }
