@@ -9,49 +9,42 @@
 
 ## IntelliJ에서 어댑터 개발환경 구성하기
 
-어댑터 모듈을 구현하기 위해서는 별도의 프로젝트를 생성하고, JENNIFER_VIEW_SERVER_PATH/lib/jennifer.server.view-5.0.x.x.jar의 경로를 Java Build Path에 추가한다.
+5.4.0 버전부터는 제니퍼 뷰서버가 설치되어 있지 않아도 메이븐 디펜던시 하나만 추가하면 어댑터를 구현할 수 있게 되었다.
 
-1. File > New > Project... > Java를 선택하여, 새로운 프로젝트를 생성한다.
-2. 컴파일 환경 구성을 위해 File > Project Structure... > Project Settings > Libraries에서 추가 버튼을 클릭하여 이미 설치된 제니퍼 뷰서버 jar 파일을 선택한다.
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/1.png)
-3. 빌드 파일 생성을 위해 File > Project Structure... > Project Settings > Artifacts에서 추가 버튼을 클릭하여 Jar > From modules with dependencies...를 클릭한다.
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/2.png)
-4. Output Layout 좌측에 Extracted 'jennifer.server.view-5.3.x.jar/ ...'를 선택하고, 삭제 버튼을 클릭한다. 어차피 어댑터 jar 파일은 제니퍼 뷰서버에서 로드되기 때문에 굳이 2번 컴파일 환경 구성을 위해 추가해둔 제니퍼 뷰서버 jar파일을 빌드 시점에 포함하지 않아도 된다. 
-![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/3.png)
-5. 어댑터 클래스를 가이드대로 개발한 후, Build > Build Artifacts... > Action > Build를 통해 jar 파일로 빌드할 수 있다.
+1. File > New > Project... > Maven을 선택하여, 새로운 프로젝트를 생성한다.
+2. GroupId와 ArtifactId를 자신의 프로젝트에 맞게 넣어주고, Next 버튼을 클릭면 프로젝트가 생성된다.
+3. src/main/java 디렉토리에 GroupId.ArtifactId 구조로 어댑터 클래스가 추가될 패키지를 생성하자.
+4. com.aries.extension 라이브러리와 빌드 관련 메이븐 플러그인에 대한 설정 코드를 [pom.xml](https://github.com/jennifersoft/jennifer-view-adapter-tutorial/blob/master/pom.xml)에 추가하자.
+> 참고로 GroupdId는 플러그인과 달리 임의로 설정해도 상관없지만 com.aries를 사용할 것을 권장한다.
 
 
-## 어댑터 핸들러 인터페이스 구현하기
-
-어댑터 클래스를 구현하기 위해서는 com.aries.view.extension.handler.Adapter 인터페이스를 구현해야 하며, on 메소드의 com.aries.view.extension.data.Model 객체 배열로 데이터를 받을 수 있다.
-
-### X-View 트랜잭션 어댑터
+## X-View 트랜잭션 어댑터
 
 실시간 X-View 차트에 나오는 트랜잭션 데이터를 어댑터 핸들러를 통해 실시간으로 받을 수 있다. 예를 들어 트랜잭션 데이터를 제니퍼 DB만이 아닌 별도의 데이터베이스에 저장하고 싶을 때, 어댑터 핸들러에 관련된 코드를 추가하면 된다. X-View 트랜잭션 어댑터 클래스 코드는 다음과 같다.
 
-    package adapter;
+    package com.aries.tutorial;
 
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.data.Transaction;
-    import com.aries.view.extension.util.LogUtil;
+    import com.aries.extension.data.TransactionData;
+    import com.aries.extension.handler.TransactionHandler;
+    import com.aries.extension.util.PropertyUtil;
 
-    public class XViewAdapter implements Adapter {
-        public void on(Model[] messages) {
-            for(int i = 0; i < messages.length; i++) {
-                Transaction model = (Transaction) message[i];
+    public class TransactionAdapter implements TransactionHandler {
+        @Override
+        public void on(TransactionData[] transactions) {
+            System.out.println("[TransactionAdapter] - " +
+                    PropertyUtil.getValue("transaction", "subject", "Unknown subject"));
 
-                // 트랜잭션 모델을 참조하여 핸들러 구현하기
-                LogUtil.info("도메인 아이디: " + model.getDomainId());
-                LogUtil.info("인스턴스 이름: " + model.getInstanceName());
-                LogUtil.info("트랜잭션 아이디: " + model.getTxid());
-                LogUtil.info("응답시간: " + model.getResponseTime());
-                LogUtil.info("애플리케이션: " + model.getApplicationName());
+            for(TransactionData data : transactions) {
+                System.out.println("Domain ID : " + data.domainId);
+                System.out.println("Instance Name : " + data.instanceName);
+                System.out.println("Transaction ID : " + data.txid);
+                System.out.println("Response Time : " + data.responseTime);
+                System.out.println("Application : " + data.applicationName);
             }
         }
     }
 
-아래는 Transaction 클래스의 프로퍼티 목록이다.
+아래는 TransactionData 클래스의 프로퍼티 목록이다.
 
 | 변수 타입 | 프로퍼티 이름 |
 |:-------|-------:|
@@ -76,34 +69,34 @@
 | String | applicationName |
 | long | txid |
 
-### Event 알림 어댑터
+## Event 알림 어댑터
 
 EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받기 위해서는 [관리 > EVENT 룰] 메뉴에서 설정된 값의 외부연동이 활성화되어 있어야 한다. EVENT 알림 어댑터 클래스 코드는 다음과 같다.
 
-    package adapter;
-    
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.data.Event;
-    import com.aries.view.extension.util.LogUtil;
-    
-    public class EventAdapter implements Adapter {
-        public void on(Model[] messages) {
-            for(int i = 0; i < messages.length; i++) {
-                Event model = (Event) message[i];
+    package com.aries.tutorial;
 
-                // EVENT 모델을 참조하여 핸들러 구현하기
-                LogUtil.info("도메인 아이디: " + model.getDomainId());
-                LogUtil.info("인스턴스 이름: " + model.getInstanceName());
-                LogUtil.info("트랜잭션 아이디: " + model.getTxid());
-                LogUtil.info("서비스 이름: " + model.getServiceName());
-                LogUtil.info("에러 유형: " + model.getErrorType());
-                LogUtil.info("이벤트 심각도: " + model.getEventLevel());
+    import com.aries.extension.data.EventData;
+    import com.aries.extension.handler.EventHandler;
+    import com.aries.extension.util.PropertyUtil;
+
+    public class EventAdapter implements EventHandler {
+        @Override
+        public void on(EventData[] events) {
+            System.out.println("[EventAdapter] - " +
+                    PropertyUtil.getValue("event", "subject", "Unknown subject"));
+
+            for(EventData data : events) {
+                System.out.println("Domain ID : " + data.domainId);
+                System.out.println("Instance Name : " + data.instanceName);
+                System.out.println("Transaction ID : " + data.txid);
+                System.out.println("Service Name : " + data.serviceName);
+                System.out.println("Error Type : " + data.errorType);
+                System.out.println("Event Level : " + data.eventLevel);
             }
         }
     }
 
-아래는 Event 클래스의 프로퍼티 목록이다.
+아래는 EventData 클래스의 프로퍼티 목록이다.
 
 | 변수 타입 | 프로퍼티 이름 |
 |:-------|-------:|
@@ -122,8 +115,64 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 | String | serviceName |
 | long | txid |
 
+## 사용자 인증 어댑터
 
-### 어댑터 사용자정의 옵션 사용하기
+제니퍼 뷰서버에서 로그인을 시도할 때, 외부 모듈에서 인증 로직을 수행할 수 있는 확장 기능이다. 사용자는 제니퍼 뷰서버의 계정 정보를 사용하지 않고, SSO 인증 방식같이 자신들이 이미 구축해둔 계정 정보를 그대로 사용할 수 있다. 
+
+### 사용자 인증 프로세스
+
+제니퍼의 인증 방식은 크게 두가지이다. 제니퍼 DB에서 사용자 정보를 가져와서 인증하는 전통적인 방법과 로그인 어댑터를 통한 인증 방법이 있다. 로그인 어댑터는 고객사마다 인증 방식이 다르기 보다 쉽게 커스터마이징 할 수 있도록 설계되었다.
+
+![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_login/7.png)
+
+#### preHandle 메소드
+
+사용자가 입력한 ID와 비밀번호를 기반으로 미리 구축해둔 인증 로직을 통해 검증한다. 만약에 인증이 실패한다면 null 값을 리턴하면 되고, 성공한다면 User 객체를 생성하여, 관련된 값들을 지정하여 리턴하면 된다.
+
+#### redirect 메소드
+
+인증이 성공하면 사용자가 최초에 보여지는 화면을 redirect 메소드를 통해 정할 수 있다.
+
+    package com.aries.tutorial;
+
+    import com.aries.extension.data.UserData;
+    import com.aries.extension.handler.LoginHandler;
+    import com.aries.extension.util.PropertyUtil;
+
+    public class LoginAdapter implements LoginHandler {
+        @Override
+        public UserData preHandle(String id, String password) {
+            System.out.println("[LoginAdapter] - " +
+                    PropertyUtil.getValue("login", "subject", "Unknown subject"));
+
+            if(id.equals("user1") && password.equals("password1")) {
+                return new UserData(id, password, "admin", "Tester");
+            }
+
+            return null;
+        }
+
+        @Override
+        public String redirect(String id, String password) {
+            return "/dashboard/realtimeAdmin";
+        }
+    }
+
+아래는 UserData 클래스의 프로퍼티 목록이며, 각각의 프로퍼티 값들은 제니퍼 사용자 DB에 저장되며 뷰서버 화면에서 확인할 수 있다.
+
+| 변수 타입 | 프로퍼티 이름 |
+|:-------|-------:|
+| String | id |
+| String | password |
+| String | groupId |
+| String | name |
+| String | email |
+| String | company |
+| String | dept |
+| String | jobTitle |
+| String | cellphone |
+
+## 사용자 정의 옵션 사용하기
 
 제니퍼 뷰서버의 관리 > 어댑터 및 실험실에서 직접 구현한 어댑터를 추가할 수 있는데, 이때 ID를 필수적으로 입력해야한다. 이 값은 어댑터 핸들러를 구현할 때, 사용자정의 옵션을 가져오기 위한 ID이다.
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_adapter/4.png)
@@ -133,22 +182,8 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 
 설정된 사용자정의 옵션들은 아래와 같이 어댑터 핸들러 구현시 사용할 수 있다. 첫번째 변수는 앞에서 어댑터를 추가할 때, 입력한 ID이며, 두번째 변수는 사용자정의 옵션키이다. 마지막 세번째 변수는 해당 키의 값이 없을 경우에 대신 추가되는 기본값이다.
 
-    package event;
+## 뷰서버 옵션 사용하기
 
-    import com.aries.view.extension.data.Event;
-    import com.aries.view.extension.data.Model;
-    import com.aries.view.extension.handler.Adapter;
-    import com.aries.view.extension.util.PropertyUtil;
-    import com.aries.view.extension.util.LogUtil;
+제니퍼 뷰서버의 server_view.conf 설정 파일에 정의된 옵션 값을 어댑터 내에서 사용할 수 있다. 첫번째 매개변수는 키 이름이고, 두번째는 값이 없을 때, 반환되는 기본 값이다.
 
-    public class LogAdapter implements Adapter {
-        @Override
-        public void on(Model[] messages) {
-            String option = PropertyUtil.getValue("eventlog", "full_path", "default_value");
-
-            for(int i = 0; i < messages.length; i++) {
-                Event model = (Event) messages[i];
-                LogUtil.info(model.getErrorType() + " : " + option);
-            }
-        }
-    }
+    String db_path = com.aries.extension.util.ConfigUtil.getValue("db_path", "../db_view");
