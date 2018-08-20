@@ -8,7 +8,7 @@ public class EventAdapter implements EventHandler {
     @Override
     public void on(EventData[] events) {
         System.out.println("[EventAdapter] - " +
-                PropertyUtil.getValue("event", "subject", "Unknown subject"));
+                PropertyUtil.getValue("event_adapter", "subject", "Unknown subject"));
 
         for(EventData data : events) {
             System.out.println("Domain ID : " + data.domainId);
@@ -16,7 +16,7 @@ public class EventAdapter implements EventHandler {
             System.out.println("Transaction ID : " + data.txid);
             System.out.println("Service Name : " + data.serviceName);
             System.out.println("Error Type : " + data.errorType);
-            System.out.println("Event Level : " + data.eventLevel);
+            System.out.println("Event Level : " + data.eventLevel + "\n");
         }
     }
 }
