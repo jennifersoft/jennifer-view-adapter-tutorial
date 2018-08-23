@@ -32,7 +32,7 @@
         @Override
         public void on(TransactionData[] transactions) {
             System.out.println("[TransactionAdapter] - " +
-                    PropertyUtil.getValue("transaction", "subject", "Unknown subject"));
+                    PropertyUtil.getValue("transaction_adapter", "subject", "Unknown subject"));
 
             for(TransactionData data : transactions) {
                 System.out.println("Domain ID : " + data.domainId);
@@ -83,7 +83,7 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
         @Override
         public void on(EventData[] events) {
             System.out.println("[EventAdapter] - " +
-                    PropertyUtil.getValue("event", "subject", "Unknown subject"));
+                    PropertyUtil.getValue("event_adapter", "subject", "Unknown subject"));
 
             for(EventData data : events) {
                 System.out.println("Domain ID : " + data.domainId);
@@ -143,7 +143,7 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
         @Override
         public UserData preHandle(String id, String password) {
             System.out.println("[LoginAdapter] - " +
-                    PropertyUtil.getValue("login", "subject", "Unknown subject"));
+                    PropertyUtil.getValue("login_adapter", "subject", "Unknown subject"));
 
             if(id.equals("user1") && password.equals("password1")) {
                 return new UserData(id, password, "admin", "Tester");
