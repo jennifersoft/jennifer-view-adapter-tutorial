@@ -1,4 +1,8 @@
-# JENNIFER View Adapter Tutorial
+# JENNIFER Extension Architecture
+
+![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_extension/infographic_en.png)
+
+# JENNIFER Adapter Tutorial
 
 This repository contains Adapter development guides and sample code for creating JENNIFER View Server Adapters
 
