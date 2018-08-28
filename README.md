@@ -1,5 +1,7 @@
 # JENNIFER Extension Architecture
 
+JENNIFER seeks to be a platform that can provide a variety of expansion features.
+
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_extension/infographic_en.png)
 
 # JENNIFER Adapter Tutorial
