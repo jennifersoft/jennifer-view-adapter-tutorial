@@ -4,7 +4,7 @@ JENNIFER seeks to be a platform that can provide a variety of expansion features
 
 ![이미지](https://raw.githubusercontent.com/jennifersoft/jennifer-extension-manuals/master/res/img/view_server_extension/infographic_en.png)
 
-# JENNIFER Adapter Tutorial
+# JENNIFER View Adapter Tutorial
 
 This repository contains Adapter development guides and sample code for creating JENNIFER View Server Adapters
 
