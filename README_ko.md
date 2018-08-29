@@ -22,27 +22,29 @@
 
 실시간 X-View 차트에 나오는 트랜잭션 데이터를 어댑터 핸들러를 통해 실시간으로 받을 수 있다. 예를 들어 트랜잭션 데이터를 제니퍼 DB만이 아닌 별도의 데이터베이스에 저장하고 싶을 때, 어댑터 핸들러에 관련된 코드를 추가하면 된다. X-View 트랜잭션 어댑터 클래스 코드는 다음과 같다.
 
-    package com.aries.tutorial;
+```java    
+package com.aries.tutorial;
 
-    import com.aries.extension.data.TransactionData;
-    import com.aries.extension.handler.TransactionHandler;
-    import com.aries.extension.util.PropertyUtil;
+import com.aries.extension.data.TransactionData;
+import com.aries.extension.handler.TransactionHandler;
+import com.aries.extension.util.PropertyUtil;
 
-    public class TransactionAdapter implements TransactionHandler {
-        @Override
-        public void on(TransactionData[] transactions) {
-            System.out.println("[TransactionAdapter] - " +
-                    PropertyUtil.getValue("transaction", "subject", "Unknown subject"));
+public class TransactionAdapter implements TransactionHandler {
+    @Override
+    public void on(TransactionData[] transactions) {
+        System.out.println("[TransactionAdapter] - " +
+                PropertyUtil.getValue("transaction_adapter", "subject", "Unknown subject"));
 
-            for(TransactionData data : transactions) {
-                System.out.println("Domain ID : " + data.domainId);
-                System.out.println("Instance Name : " + data.instanceName);
-                System.out.println("Transaction ID : " + data.txid);
-                System.out.println("Response Time : " + data.responseTime);
-                System.out.println("Application : " + data.applicationName);
-            }
+        for(TransactionData data : transactions) {
+            System.out.println("Domain ID : " + data.domainId);
+            System.out.println("Instance Name : " + data.instanceName);
+            System.out.println("Transaction ID : " + data.txid);
+            System.out.println("Response Time : " + data.responseTime);
+            System.out.println("Application : " + data.applicationName);
         }
     }
+}
+```
 
 아래는 TransactionData 클래스의 프로퍼티 목록이다.
 
@@ -73,28 +75,30 @@
 
 EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받기 위해서는 [관리 > EVENT 룰] 메뉴에서 설정된 값의 외부연동이 활성화되어 있어야 한다. EVENT 알림 어댑터 클래스 코드는 다음과 같다.
 
-    package com.aries.tutorial;
+```java
+package com.aries.tutorial;
 
-    import com.aries.extension.data.EventData;
-    import com.aries.extension.handler.EventHandler;
-    import com.aries.extension.util.PropertyUtil;
+import com.aries.extension.data.EventData;
+import com.aries.extension.handler.EventHandler;
+import com.aries.extension.util.PropertyUtil;
 
-    public class EventAdapter implements EventHandler {
-        @Override
-        public void on(EventData[] events) {
-            System.out.println("[EventAdapter] - " +
-                    PropertyUtil.getValue("event", "subject", "Unknown subject"));
+public class EventAdapter implements EventHandler {
+    @Override
+    public void on(EventData[] events) {
+        System.out.println("[EventAdapter] - " +
+                PropertyUtil.getValue("event_adapter", "subject", "Unknown subject"));
 
-            for(EventData data : events) {
-                System.out.println("Domain ID : " + data.domainId);
-                System.out.println("Instance Name : " + data.instanceName);
-                System.out.println("Transaction ID : " + data.txid);
-                System.out.println("Service Name : " + data.serviceName);
-                System.out.println("Error Type : " + data.errorType);
-                System.out.println("Event Level : " + data.eventLevel);
-            }
+        for(EventData data : events) {
+            System.out.println("Domain ID : " + data.domainId);
+            System.out.println("Instance Name : " + data.instanceName);
+            System.out.println("Transaction ID : " + data.txid);
+            System.out.println("Service Name : " + data.serviceName);
+            System.out.println("Error Type : " + data.errorType);
+            System.out.println("Event Level : " + data.eventLevel);
         }
     }
+}
+```
 
 아래는 EventData 클래스의 프로퍼티 목록이다.
 
@@ -133,30 +137,32 @@ EVENT 발생 시점에 관련된 데이터를 어댑터 핸들러를 통해 받�
 
 인증이 성공하면 사용자가 최초에 보여지는 화면을 redirect 메소드를 통해 정할 수 있다.
 
-    package com.aries.tutorial;
+```java
+package com.aries.tutorial;
 
-    import com.aries.extension.data.UserData;
-    import com.aries.extension.handler.LoginHandler;
-    import com.aries.extension.util.PropertyUtil;
+import com.aries.extension.data.UserData;
+import com.aries.extension.handler.LoginHandler;
+import com.aries.extension.util.PropertyUtil;
 
-    public class LoginAdapter implements LoginHandler {
-        @Override
-        public UserData preHandle(String id, String password) {
-            System.out.println("[LoginAdapter] - " +
-                    PropertyUtil.getValue("login", "subject", "Unknown subject"));
+public class LoginAdapter implements LoginHandler {
+    @Override
+    public UserData preHandle(String id, String password) {
+        System.out.println("[LoginAdapter] - " +
+                PropertyUtil.getValue("login_adapter", "subject", "Unknown subject"));
 
-            if(id.equals("user1") && password.equals("password1")) {
-                return new UserData(id, password, "admin", "Tester");
-            }
-
-            return null;
+        if(id.equals("user1") && password.equals("password1")) {
+            return new UserData(id, password, "admin", "Tester");
         }
 
-        @Override
-        public String redirect(String id, String password) {
-            return "/dashboard/realtimeAdmin";
-        }
+        return null;
     }
+
+    @Override
+    public String redirect(String id, String password) {
+        return "/dashboard/realtimeAdmin";
+    }
+}
+```
 
 아래는 UserData 클래스의 프로퍼티 목록이며, 각각의 프로퍼티 값들은 제니퍼 사용자 DB에 저장되며 뷰서버 화면에서 확인할 수 있다.
 

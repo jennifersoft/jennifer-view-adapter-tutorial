@@ -15,15 +15,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- TODO: 플러그인 jar 파일 생성 디렉토리 및 파일 네이밍 설정 -->
+        <!-- TODO: 플러그인 jar 파일 생성 디렉토리 및 파일 네이밍 설정 (Plug-in jar file generation directory and file naming settings)  -->
         <plugin.output.directoryName>${project.basedir}/dist</plugin.output.directoryName>
         <plugin.output.fileName>${project.artifactId}-${project.version}</plugin.output.fileName>
     </properties>
 
     <dependencies>
-        <!-- TODO: 사용자가 필요한 라이브러리 추가하는 영역 -->
+        <!-- TODO: 사용자가 필요한 라이브러리 추가하는 영역 (Add required dependencies here) -->
 
-        <!-- TODO: 제니퍼 플러그인을 구현하기 위한 필수 라이브러리 -->
+        <!-- TODO: 제니퍼 플러그인을 구현하기 위한 필수 라이브러리 (Required library for implementing the Jennifer Plugin) -->
         <dependency>
             <groupId>com.aries</groupId>
             <artifactId>extension</artifactId>
