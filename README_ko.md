@@ -54,6 +54,7 @@ public class TransactionAdapter implements TransactionHandler {
 | String | domainName |
 | int | instanceId |
 | String | instanceName |
+| String | instanceDescription |
 | String | guid |
 | String | clientIp |
 | long | clientId |
