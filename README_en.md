@@ -57,6 +57,7 @@ Below is a list of properties of the `TransactionData` class.
 | String | domainName |
 | int | instanceId |
 | String | instanceName |
+| String | instanceDescription |
 | String | guid |
 | String | clientIp |
 | long | clientId |
